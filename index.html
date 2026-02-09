@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ЛИЧЕН БОНУС</title>
+    <title>Free Spin</title>
 
     <style>
       html,
@@ -15,172 +15,130 @@
         overflow: hidden;
         font-family: Arial, sans-serif;
       }
+
       body {
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
         background-image: url("CURA3.jpg");
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
       }
 
-      .content-box {
-        width: 40%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        gap: 1.25rem;
-      }
-
-      .main-heading {
-        font-size: 5rem;
-        font-weight: 900;
-        color: #ffffff;
-        text-shadow: 0 0 1.125rem rgba(0, 123, 255, 1),
-          0 0 2rem rgba(0, 123, 255, 0.8);
-        margin: 18% 0 0;
-      }
-
-      .desc-text {
-        font-size: 1.75rem;
-        font-weight: 500;
-        color: #ffffff;
-        line-height: 1.4;
-      }
-
-      .cta-btn2 {
-        padding: 1.25rem 3.125rem;
-        font-size: 2rem;
-        font-weight: 700;
-        background: #ffcb05;
-        color: #000;
-        border-radius: 3.75rem;
-        text-decoration: none;
-        box-shadow: 0 0 0.875rem rgba(0, 123, 255, 0.8);
-        transition: 0.2s ease;
-      }
-
-      .cta-btn2:hover {
-        transform: scale(1.05);
-        box-shadow: 0 0 1.375rem rgba(0, 123, 255, 1);
-      }
-
-      #countdown {
-        background: rgba(0, 0, 0, 0.6);
-        color: #ffffff;
-        padding: 1.125rem 3.125rem;
-        font-size: 2.25rem;
-        font-weight: 700;
-        border-radius: 3.75rem;
-        font-family: monospace;
-        box-shadow: 0 0 0.875rem rgba(0, 123, 255, 0.8);
-      }
-
-      .legal-text {
-        position: fixed;
-        bottom: 0.1rem;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 100%;
-        text-align: center;
-        font-size: 0.75rem;
-        line-height: 1.25;
-        color: #ffffff;
-        z-index: 9999;
-        pointer-events: none;
-      }
-
       @media (max-width: 768px) {
         body {
           background-image: url("CURA3.3.jpg");
-          flex-direction: column;
-          justify-content: flex-start;
-          padding-top: 2.5rem;
         }
+      }
 
-        .content-box {
-          width: 90%;
-        }
+      .spin-btn {
+        position: fixed;
+        left: 50%;
+        bottom: 2.5rem;
+        transform: translateX(-50%);
+        padding: 1.25rem 5.5rem;
+        font-size: 1.75rem;
+        font-weight: 800;
+        background: #ffcb05;
+        color: #000;
+        border: none;
+        border-radius: 3.75rem;
+        box-shadow: 0 0 0.875rem rgba(0, 123, 255, 0.8);
+        cursor: pointer;
+        z-index: 10000;
+        white-space: nowrap;
+        transition: 0.2s ease;
+      }
 
-        .main-heading {
-          font-size: 3.4rem;
-          line-height: 0.95;
-          margin-top: 2rem;
-        }
+      .spin-btn:hover {
+        transform: translateX(-50%) scale(1.05);
+      }
 
-        .desc-text {
-          font-size: 1.375rem;
-          width: 95%;
-          margin: 0.625rem auto;
-        }
+      .spin-btn:disabled {
+        opacity: 0.6;
+        cursor: default;
+      }
 
-        .cta-btn2 {
-          position: absolute;
-          bottom: 6.25rem;
-          left: 50%;
-          transform: translateX(-50%);
-          font-size: 1.75rem;
-          padding: 1.25rem 5.625rem;
-          white-space: nowrap;
-        }
+      .video-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.95);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+      }
 
-        #countdown {
-          position: absolute;
-          bottom: 1.875rem;
-          left: 50%;
-          transform: translateX(-50%);
-          font-size: 1.75rem;
-          padding: 1rem 3.75rem;
-        }
+      .video-overlay.is-open {
+        display: flex;
+      }
+
+      video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
       }
     </style>
   </head>
 
   <body>
-    <div class="content-box">
-      <h1 class="main-heading">ТРОЕН БОНУС СТАРТ!</h1>
+    <button id="spinBtn" class="spin-btn">Free spin</button>
 
-      <p class="desc-text">
-        100% • 150% • 250% Бонус<br />
-        За първите ти 3 депозита
-      </p>
-
-      <a
-        href="https://bit.ly/3ZhPd8D"
-        class="cta-btn2"
-      >
-        Играй сега
-      </a>
-
-      <div id="countdown">18:00</div>
+    <div id="videoOverlay" class="video-overlay">
+      <video id="spinVideo" playsinline preload="auto"></video>
     </div>
 
-    <p class="legal-text">
-      18+ Играйте отговорно. Хазартът носи риск от развиване на зависимост.
-    </p>
-
     <script>
-      let totalSeconds = 18 * 60;
-      const countdownEl = document.getElementById("countdown");
+      const btn = document.getElementById("spinBtn");
+      const overlay = document.getElementById("videoOverlay");
+      const video = document.getElementById("spinVideo");
 
-      const timerInterval = setInterval(() => {
-        let minutes = Math.floor(totalSeconds / 60);
-        let seconds = totalSeconds % 60;
+      const FINAL_URL = "https://bit.ly/3MtCRqZ";
 
-        countdownEl.textContent =
-          minutes.toString().padStart(2, "0") +
-          ":" +
-          seconds.toString().padStart(2, "0");
+      // 0 = prvi video
+      // 1 = drugi video
+      // 2 = gotovo (redirect)
+      let step = 0;
+      let playing = false;
 
-        totalSeconds--;
+      function play(src) {
+        playing = true;
+        btn.disabled = true;
 
-        if (totalSeconds < 0) {
-          clearInterval(timerInterval);
-          countdownEl.textContent = "00:00";
+        overlay.classList.add("is-open");
+
+        video.pause();
+        video.currentTime = 0;
+        video.src = src;
+
+        video.play().catch(() => {
+          playing = false;
+          btn.disabled = false;
+        });
+      }
+
+      btn.addEventListener("click", () => {
+        if (playing) return;
+
+        if (step === 0) {
+          play("1.mp4");
+        } else if (step === 1) {
+          play("2.mp4");
+        } else if (step === 2) {
+          window.location.href = FINAL_URL;
         }
-      }, 1000);
+      });
+
+      video.addEventListener("ended", () => {
+        overlay.classList.remove("is-open");
+        playing = false;
+        btn.disabled = false;
+
+        if (step === 0) {
+          step = 1;
+        } else if (step === 1) {
+          step = 2;
+          btn.textContent = "Continue";
+        }
+      });
     </script>
   </body>
 </html>
